@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Management</title>
+   <link rel="stylesheet" href="style.css">
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <body>
+  <h1>Employee Management</h1>
+  <label for="nameSearch">Search by Name:</label>
+  <input type="text" id="nameSearch" oninput="filterEmployees()" placeholder="Enter name">
+
+  <label for="designationFilter">Filter by Designation:</label>
+  <select id="designationFilter" onchange="filterEmployees()">
+    <option value="">All</option>
+    <option value="Senior Developer">Senior Developer</option>
+    <option value="QA Engineer">QA Engineer</option>
+    <option value="Project Manager">Project Manager</option>
+  </select>
+
+  <label for="skillsFilter">Filter by Skills:</label>
+  <select id="skillsFilter" onchange="filterEmployees()">
+    <option value="">All</option>
+    <option value="JavaScript">JavaScript</option>
+    <option value="Python">Python</option>
+    <option value="Java">Java</option>
+    <option value="HTML">HTML</option>
+    <option value="CSS">CSS</option>
+    <option value="Photoshop">Photoshop</option>
+    <option value="Manual Testing">Manual Testing</option>
+    <option value="SQL">SQL</option>
+  </select>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Skills</th>
+        <th>Projects</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTableBody"></tbody>
+  </table>
+
+  <script>
+    // JSON data
+    const jsonData = {
+      "employees": [
+        {
+          "id": 1,
+          "name": "Mr. A",
+          "designation": "Senior Developer",
+          "skills": [
+            "JavaScript",
+            "Python",
+            "Java"
+          ],
+          "projects": [
+            {
+              "name": "Project A",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Bob",
+                  "role": "Designer"
+                },
+                {
+                  "name": null,
+                  "role": "Tester"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 2,
+                  "name": "Task 2",
+                  "status": "Completed"
+                },
+                {
+                  "id": 3,
+                  "name": "Task 3",
+                  "status": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Mr. B",
+          "designation": null,
+          "skills": [
+            "HTML",
+            "CSS",
+            "Photoshop"
+          ],
+          "projects": [
+            {
+              "name": "Project B",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": null,
+                  "role": "Designer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 2,
+                  "name": "Task 2",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 3,
+                  "name": "Task 3",
+                  "status": "undefined"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Mr. C",
+          "designation": "QA Engineer",
+          "skills": [
+            "Manual Testing",
+            "undefined",
+            "SQL"
+          ],
+          "projects": [
+            {
+              "name": "Project C",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "David",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Eve",
+                  "role": "Designer"
+                },
+                {
+                  "name": "undefined",
+                  "role": "Tester"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "Completed"
+                },
+                {
+                  "id": 2,
+                  "name": "null",
+                  "status": "Completed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "undefined",
+          "name": "Mr. D",
+          "designation": "Project Manager",
+          "skills": [],
+          "projects": [
+            {
+              "name": "Project D",
+              "description": null,
+              "team": [],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "Pending"
+                },
+                {
+                  "id": "undefined",
+                  "name": null,
+                  "status": "In Progress"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Mr. E",
+          "designation": "Senior Developer",
+          "skills": [
+            "JavaScript",
+            "Python",
+            "Java"
+          ],
+          "projects": [
+            {
+              "name": "Project E",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Bob",
+                  "role": "Designer"
+                },
+                {
+                  "name": null,
+                  "role": "Tester"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Mr. F",
+          "designation": null,
+          "skills": [
+            "HTML",
+            "CSS",
+            "Photoshop"
+          ],
+          "projects": [
+            {
+              "name": "Project F",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": null,
+                  "role": "Designer"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 2,
+                  "name": "Task 2",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 3,
+                  "name": "Task 3",
+                  "status": "undefined"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": null,
+          "designation": "QA Engineer",
+          "skills": [
+            "Manual Testing",
+            "undefined",
+            "SQL"
+          ],
+          "projects": [
+            {
+              "name": "Project G",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "David",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Eve",
+                  "role": "Designer"
+                },
+                {
+                  "name": "undefined",
+                  "role": "Tester"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "Completed"
+                },
+                {
+                  "id": 2,
+                  "name": null,
+                  "status": "Completed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Mr. H",
+          "designation": "Project Manager",
+          "skills": [],
+          "projects": null
+        },
+        {
+          "id": 9,
+          "name": "Mr. I",
+          "designation": "Senior Developer",
+          "skills": [
+            "JavaScript",
+            "Python",
+            "Java"
+          ],
+          "projects": [
+            {
+              "name": "Project I",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team": [
+                {
+                  "name": "Alice",
+                  "role": "Developer"
+                },
+                {
+                  "name": "Bob",
+                  "role": "Designer"
+                },
+                {
+                  "name": null,
+                  "role": "Tester"
+                }
+              ],
+              "tasks": [
+                {
+                  "id": 1,
+                  "name": "Task 1",
+                  "status": "In Progress"
+                },
+                {
+                  "id": 2,
+                  "name": "Task 2",
+                  "status": "Completed"
+                },
+                {
+                  "id": 3,
+                  "name": "Task 3",
+                  "status": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+       "id":10,
+       "name":"Mr. J",
+       "designation":null,
+       "skills":[
+          "HTML",
+          "CSS",
+          "Photoshop"
+       ],
+         "projects": [
+         {
+         "name":"Project J",
+              "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+              "team":[
+                 {
+                    "name":"Alice",
+                    "role":"Developer"
+                 },
+                 {
+                    "name":null,
+                    "role":"Designer"
+                 }
+              ],
+              "tasks":[
+                 {
+                    "id":1,
+                    "name":"Task 1",
+                    "status":"In Progress"
+                 },
+                 {
+                    "id":2,
+                    "name":"Task 2",
+                    "status":"In Progress"
+                 },
+                 {
+                    "id":3,
+                    "name":"Task 3",
+                    "status":"undefined"
+
+                  }
+                ]
+                }
+                ]
+                },
+      ]
+    };
+
+    // Get the employee table body
+    const employeeTableBody = document.getElementById("employeeTableBody");
+
+    // Clear any existing content
+    employeeTableBody.innerHTML = "";
+
+    // Iterate through employees
+    for (const employee of jsonData.employees) {
+      const row = document.createElement("tr");
+
+      // Create table cells and set their values
+      const idCell = document.createElement("td");
+      idCell.textContent = employee.id;
+      row.appendChild(idCell);
+
+      const nameCell = document.createElement("td");
+      nameCell.textContent = employee.name || "N/A";
+      row.appendChild(nameCell);
+
+      const designationCell = document.createElement("td");
+      designationCell.textContent = employee.designation || "N/A";
+      row.appendChild(designationCell);
+
+      const skillsCell = document.createElement("td");
+      skillsCell.textContent = employee.skills.join(", ");
+      row.appendChild(skillsCell);
+
+      const projectsCell = document.createElement("td");
+      if (employee.projects) {
+        const projectsList = document.createElement("ul");
+        for (const project of employee.projects) {
+          const projectItem = document.createElement("li");
+          projectItem.textContent = project.name;
+          projectsList.appendChild(projectItem);
+        }
+        projectsCell.appendChild(projectsList);
+      } else {
+        projectsCell.textContent = "N/A";
+      }
+      row.appendChild(projectsCell);
+
+      // Append the row to the table body
+      employeeTableBody.appendChild(row);
+    }
+  </script>
+</body>
+</html>
